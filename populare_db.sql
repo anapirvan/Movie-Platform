@@ -54,49 +54,48 @@ DECLARE
         INSERT INTO FILM_CATEGORII (film_id, categorie_id) VALUES (v_fid, v_cid);
     END;
 BEGIN
-    -- The Godfather: Dramă + Suspans + Mister
     fc('The Godfather', 'Dramă');                fc('The Godfather', 'Suspans');              fc('The Godfather', 'Mister');
-    -- Fight Club: Dramă + Suspans + Acțiune
+
     fc('Fight Club', 'Dramă');                   fc('Fight Club', 'Suspans');                 fc('Fight Club', 'Acțiune');
-    -- The Lord of the Rings: Aventură + Fantezie + Acțiune
+    
     fc('The Lord of the Rings: The Fellowship of the Ring', 'Aventură');
     fc('The Lord of the Rings: The Fellowship of the Ring', 'Fantezie');
     fc('The Lord of the Rings: The Fellowship of the Ring', 'Acțiune');
-    -- Goodfellas: Dramă + Suspans + Mister
+   
     fc('Goodfellas', 'Dramă');                   fc('Goodfellas', 'Suspans');                 fc('Goodfellas', 'Mister');
-    -- Se7en: Suspans + Groază + Mister
+    
     fc('Se7en', 'Suspans');                      fc('Se7en', 'Groază');                       fc('Se7en', 'Mister');
-    -- Saving Private Ryan: Război + Dramă + Acțiune
+   
     fc('Saving Private Ryan', 'Război');         fc('Saving Private Ryan', 'Dramă');          fc('Saving Private Ryan', 'Acțiune');
-    -- Titanic: Romantic + Dramă
+    
     fc('Titanic', 'Romantic');                   fc('Titanic', 'Dramă');
-    -- Joker: Dramă + Suspans + Groază
+    
     fc('Joker', 'Dramă');                        fc('Joker', 'Suspans');                      fc('Joker', 'Groază');
-    -- The Prestige: Dramă + Mister + Suspans
+    
     fc('The Prestige', 'Dramă');                 fc('The Prestige', 'Mister');                fc('The Prestige', 'Suspans');
-    -- Whiplash: Dramă + Muzical
+   
     fc('Whiplash', 'Dramă');                     fc('Whiplash', 'Muzical');
-    -- Black Swan: Dramă + Suspans + Groază
+    
     fc('Black Swan', 'Dramă');                   fc('Black Swan', 'Suspans');                 fc('Black Swan', 'Groază');
-    -- The Revenant: Aventură + Dramă + Acțiune
+    
     fc('The Revenant', 'Aventură');              fc('The Revenant', 'Dramă');                 fc('The Revenant', 'Acțiune');
-    -- No Country for Old Men: Suspans + Dramă + Western
+    
     fc('No Country for Old Men', 'Suspans');     fc('No Country for Old Men', 'Dramă');       fc('No Country for Old Men', 'Western');
-    -- Avengers: Endgame: Acțiune + Sci-Fi + Aventură
+    
     fc('Avengers: Endgame', 'Acțiune');          fc('Avengers: Endgame', 'Sci-Fi');           fc('Avengers: Endgame', 'Aventură');
-    -- Everything Everywhere All at Once: Sci-Fi + Comedie + Acțiune
+    
     fc('Everything Everywhere All at Once', 'Sci-Fi');
     fc('Everything Everywhere All at Once', 'Comedie');
     fc('Everything Everywhere All at Once', 'Acțiune');
-    -- The Green Mile: Dramă + Mister
+    
     fc('The Green Mile', 'Dramă');               fc('The Green Mile', 'Mister');
-    -- Braveheart: Război + Dramă + Istoric
+    
     fc('Braveheart', 'Război');                  fc('Braveheart', 'Dramă');                   fc('Braveheart', 'Istoric');
-    -- Memento: Mister + Suspans + Dramă
+   
     fc('Memento', 'Mister');                     fc('Memento', 'Suspans');                    fc('Memento', 'Dramă');
-    -- Mad Max: Fury Road: Acțiune + Sci-Fi + Aventură
+    
     fc('Mad Max: Fury Road', 'Acțiune');         fc('Mad Max: Fury Road', 'Sci-Fi');          fc('Mad Max: Fury Road', 'Aventură');
-    -- Bohemian Rhapsody: Biografie + Dramă + Muzical
+    
     fc('Bohemian Rhapsody', 'Biografie');        fc('Bohemian Rhapsody', 'Dramă');            fc('Bohemian Rhapsody', 'Muzical');
     COMMIT;
     DBMS_OUTPUT.PUT_LINE('[info]: FILM_CATEGORII populat: ' || SQL%ROWCOUNT || ' asocieri.');
@@ -406,7 +405,7 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('[info]: Comentarii inserate cu sentiment calculat automat de trigger.');
 END;
 /
-
+--COMENTARII + COMENTARIU_ACTOR
 DECLARE
     v_com_id    NUMBER;
     v_film_id   NUMBER;
@@ -468,7 +467,7 @@ BEGIN
             'Mel Gibson a transmis perfect determinarea si suferinta lui William Wallace.');
     link_actor('Mel', 'Gibson');
 
-    -- comentarii despre mai multi actori (demonstreaza M:N)
+    -- comentarii despre mai multi actori 
     ins_com('oana.serban@yahoo.com', 'Se7en',
             'Atat Pitt cat si Spacey au creat o tensiune palpabila, de neuitat pe ecran!');
     link_actor('Brad',  'Pitt');
