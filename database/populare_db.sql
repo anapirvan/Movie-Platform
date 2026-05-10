@@ -153,39 +153,37 @@ END;
 /
 
 -- 4. ACTORI
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Marlon',   'Brando',        DATE '1924-04-03');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Brad',     'Pitt',          DATE '1963-12-18');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Viggo',    'Mortensen',     DATE '1958-10-20');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Robert',   'De Niro',       DATE '1943-08-17');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Kevin',    'Spacey',        DATE '1959-07-26');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Tom',      'Hanks',         DATE '1956-07-09');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Leonardo', 'DiCaprio',      DATE '1974-11-11');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Joaquin',  'Phoenix',       DATE '1974-10-28');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Hugh',     'Jackman',       DATE '1968-10-12');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Miles',    'Teller',        DATE '1987-02-20');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Natalie',  'Portman',       DATE '1981-06-09');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Tom',      'Hardy',         DATE '1977-09-15');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Javier',   'Bardem',        DATE '1969-03-01');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Robert',   'Downey Jr.',    DATE '1965-04-04');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Michelle', 'Yeoh',          DATE '1962-08-06');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Marlon', 'Brando', DATE '1924-04-03');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Brad', 'Pitt', DATE '1963-12-18');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Viggo', 'Mortensen', DATE '1958-10-20');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Robert', 'De Niro', DATE '1943-08-17');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Kevin', 'Spacey', DATE '1959-07-26');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Tom', 'Hanks',  DATE '1956-07-09');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Leonardo', 'DiCaprio', DATE '1974-11-11');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Joaquin',  'Phoenix', DATE '1974-10-28');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Hugh', 'Jackman', DATE '1968-10-12');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Miles', 'Teller', DATE '1987-02-20');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Natalie', 'Portman', DATE '1981-06-09');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Tom',  'Hardy', DATE '1977-09-15');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Javier', 'Bardem', DATE '1969-03-01');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Robert', 'Downey Jr.', DATE '1965-04-04');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Michelle', 'Yeoh', DATE '1962-08-06');
 INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Michael',  'Clarke Duncan', DATE '1957-12-10');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Mel',      'Gibson',        DATE '1956-01-03');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Guy',      'Pearce',        DATE '1967-10-05');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Charlize', 'Theron',        DATE '1975-08-07');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Rami',     'Malek',         DATE '1981-05-12');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Mel', 'Gibson', DATE '1956-01-03');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Guy', 'Pearce', DATE '1967-10-05');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Charlize', 'Theron', DATE '1975-08-07');
+INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Rami', 'Malek', DATE '1981-05-12');
 
 COMMIT;
 
 -- 5. DISTRIBUTIE
 DECLARE
-    PROCEDURE insert_distributie(p_titlu VARCHAR2, p_prenume VARCHAR2, p_familie VARCHAR2,
-                       p_personaj VARCHAR2, p_tip VARCHAR2) IS
+    PROCEDURE insert_distributie(p_titlu VARCHAR2, p_prenume VARCHAR2, p_familie VARCHAR2, p_personaj VARCHAR2, p_tip VARCHAR2) IS
         v_film_id  NUMBER;
         v_actor_id NUMBER;
     BEGIN
-        SELECT film_id  INTO v_film_id  FROM FILME  WHERE titlu       = p_titlu;
-        SELECT actor_id INTO v_actor_id FROM ACTORI WHERE prenume     = p_prenume
-                                                     AND nume_familie = p_familie;
+        SELECT film_id  INTO v_film_id  FROM FILME  WHERE titlu = p_titlu;
+        SELECT actor_id INTO v_actor_id FROM ACTORI WHERE prenume = p_prenume AND nume_familie = p_familie;
         INSERT INTO DISTRIBUTIE (film_id, actor_id, nume_personaj, tip_rol)
         VALUES (v_film_id, v_actor_id, p_personaj, p_tip);
     END;
@@ -231,33 +229,33 @@ DECLARE
     v_nr_clienti NUMBER;
     v_email VARCHAR2(150);
     
-    idx_prenume NUMBER;
-    idx_nume NUMBER;
-    idx_telefon NUMBER;
-    idx_email_prefix NUMBER;
-    idx_adresa NUMBER;
-    idx_oras NUMBER;
+    pos_prenume NUMBER;
+    pos_nume NUMBER;
+    pos_telefon NUMBER;
+    pos_email_prefix NUMBER;
+    pos_adresa NUMBER;
+    pos_oras NUMBER;
 BEGIN
     v_nr_clienti := TRUNC(DBMS_RANDOM.VALUE(15, 31));
     
     FOR i IN 1..v_nr_clienti LOOP
-        idx_prenume := TRUNC(DBMS_RANDOM.VALUE(1, v_prenume.count));
-        idx_nume := TRUNC(DBMS_RANDOM.VALUE(1, v_nume.count));
-        idx_telefon := TRUNC(DBMS_RANDOM.VALUE(1, v_telefon.count));
-        idx_email_prefix := TRUNC(DBMS_RANDOM.VALUE(1, v_email_prefix.count));
-        idx_adresa := TRUNC(DBMS_RANDOM.VALUE(1, v_adresa.count));
-        idx_oras := TRUNC(DBMS_RANDOM.VALUE(1, v_oras.count));
+        pos_prenume := TRUNC(DBMS_RANDOM.VALUE(1, v_prenume.count));
+        pos_nume := TRUNC(DBMS_RANDOM.VALUE(1, v_nume.count));
+        pos_telefon := TRUNC(DBMS_RANDOM.VALUE(1, v_telefon.count));
+        pos_email_prefix := TRUNC(DBMS_RANDOM.VALUE(1, v_email_prefix.count));
+        pos_adresa := TRUNC(DBMS_RANDOM.VALUE(1, v_adresa.count));
+        pos_oras := TRUNC(DBMS_RANDOM.VALUE(1, v_oras.count));
         
-        v_email := v_email_prefix(idx_email_prefix) || i || '@gmail.com';
+        v_email := v_email_prefix(pos_email_prefix) || i || '@gmail.com';
         
         INSERT INTO CLIENTI (prenume, nume, telefon, email, adresa, oras)
         VALUES (
-            v_prenume(idx_prenume), 
-            v_nume(idx_nume), 
-            v_telefon(idx_telefon), 
+            v_prenume(pos_prenume), 
+            v_nume(pos_nume), 
+            v_telefon(pos_telefon), 
             v_email, 
-            v_adresa(idx_adresa), 
-            v_oras(idx_oras)
+            v_adresa(pos_adresa), 
+            v_oras(pos_oras)
         );
     END LOOP;
     
@@ -271,8 +269,8 @@ INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Regie excelenta', 'POZI
 INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Actorie de exceptie', 'POZITIV');
 INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Ritmul naratiunii lent', 'NEGATIV');
 INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('As recomanda prietenilor', 'POZITIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Personaje bine construite', 'POZITIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Efecte vizuale spectaculoase', 'POZITIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Personaje bine construite','POZITIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Efecte vizuale spectaculoase','POZITIV');
 INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Final dezamagitor', 'NEGATIV');
 INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Coloana sonora memorabila', 'POZITIV');
 INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Prea multa violenta', 'NEGATIV');
@@ -292,8 +290,8 @@ DECLARE
     v_id_versiuni t_id_list;
     v_id_useri t_id_list;
     
-    CURSOR cur_versiuni IS SELECT versiune_id FROM VERSIUNI_FILME;
-    CURSOR cur_useri IS SELECT client_id FROM CLIENTI;
+    CURSOR cursor_versiuni IS SELECT versiune_id FROM VERSIUNI_FILME;
+    CURSOR cursor_useri IS SELECT client_id FROM CLIENTI;
     
     v_durata_reala NUMBER(4);
     v_durata_ref NUMBER(4);
@@ -304,13 +302,13 @@ DECLARE
 BEGIN
     v_total := TRUNC(DBMS_RANDOM.VALUE(15, 31));
     
-    OPEN cur_versiuni;
-    FETCH cur_versiuni BULK COLLECT INTO v_id_versiuni LIMIT 100;
-    CLOSE cur_versiuni;
+    OPEN cursor_versiuni;
+    FETCH cursor_versiuni BULK COLLECT INTO v_id_versiuni LIMIT 100;
+    CLOSE cursor_versiuni;
     
-    OPEN cur_useri;
-    FETCH cur_useri BULK COLLECT INTO v_id_useri LIMIT 100;
-    CLOSE cur_useri;
+    OPEN cursor_useri;
+    FETCH cursor_useri BULK COLLECT INTO v_id_useri LIMIT 100;
+    CLOSE cursor_useri;
     
     FOR i IN 1..v_total LOOP
         pos_versiune := TRUNC(DBMS_RANDOM.VALUE(1, v_id_versiuni.count + 1));
@@ -323,13 +321,13 @@ BEGIN
         
         CASE v_stare_nmb
             WHEN 0 THEN
-                v_stare      := 'COMPLETA';
+                v_stare := 'COMPLETA';
                 v_durata_reala := v_durata_ref;
             WHEN 1 THEN
-                v_stare      := 'PARTIALA';
+                v_stare := 'PARTIALA';
                 v_durata_reala := ROUND(v_durata_ref * DBMS_RANDOM.VALUE(0.5, 0.8));
             ELSE
-                v_stare      := 'ABANDONATA';
+                v_stare := 'ABANDONATA';
                 v_durata_reala := ROUND(v_durata_ref * DBMS_RANDOM.VALUE(0.05, 0.5));
         END CASE;
         
@@ -348,7 +346,7 @@ END;
 -- 9. VOTURI
 DECLARE
     v_inserari_total NUMBER;
-    TYPE t_id_list IS TABLE OF NUMBER;
+    TYPE t_id_list IS VARRAY(100) OF NUMBER;
     v_id_clienti t_id_list;
     v_id_filme t_id_list;
     
@@ -399,7 +397,7 @@ DECLARE
     
     v_total NUMBER;
     
-    v_texte t_str := t_str(
+    v_comentarii t_str := t_str(
         'O capodopera absoluta, unul din cele mai bune filme pe care le-am vazut vreodata.',
         'Total dezamagitor, scenariu predictibil si fara substanta. Nu recomand.',
         'M-a emotionat profund, am plans la final. O experienta cinematografica unica!',
@@ -430,7 +428,7 @@ DECLARE
     
     pos_film   NUMBER;
     pos_client NUMBER;
-    pos_text   NUMBER;
+    pos_comentariu   NUMBER;
 BEGIN
     v_total := TRUNC(DBMS_RANDOM.VALUE(20, 40));
     
@@ -445,13 +443,13 @@ BEGIN
     FOR i IN 1..v_total LOOP
         pos_film   := TRUNC(DBMS_RANDOM.VALUE(1, v_list_filme.count + 1));
         pos_client := TRUNC(DBMS_RANDOM.VALUE(1, v_list_clienti.count + 1));
-        pos_text   := TRUNC(DBMS_RANDOM.VALUE(1, v_texte.count + 1));
+        pos_comentariu   := TRUNC(DBMS_RANDOM.VALUE(1, v_comentarii.count + 1));
         
         INSERT INTO COMENTARII (client_id, film_id, text_comentariu, data_comentariu)
         VALUES (
             v_list_clienti(pos_client),
             v_list_filme(pos_film),
-            v_texte(pos_text),
+            v_comentarii(pos_comentariu),
             SYSDATE - DBMS_RANDOM.VALUE(1, 365)
         );
     END LOOP;
@@ -484,7 +482,7 @@ BEGIN
     CLOSE cursor_comentarii;
     
     FOR i IN 1..v_total LOOP
-        pos_actor      := TRUNC(DBMS_RANDOM.VALUE(1, v_list_actori.count + 1));
+        pos_actor := TRUNC(DBMS_RANDOM.VALUE(1, v_list_actori.count + 1));
         pos_comentariu := TRUNC(DBMS_RANDOM.VALUE(1, v_list_comentarii.count + 1));
         
         BEGIN
