@@ -153,26 +153,26 @@ END;
 /
 
 -- 4. ACTORI
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Marlon', 'Brando', DATE '1924-04-03');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Brad', 'Pitt', DATE '1963-12-18');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Viggo', 'Mortensen', DATE '1958-10-20');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Robert', 'De Niro', DATE '1943-08-17');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Kevin', 'Spacey', DATE '1959-07-26');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Tom', 'Hanks',  DATE '1956-07-09');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Leonardo', 'DiCaprio', DATE '1974-11-11');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Joaquin',  'Phoenix', DATE '1974-10-28');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Hugh', 'Jackman', DATE '1968-10-12');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Miles', 'Teller', DATE '1987-02-20');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Natalie', 'Portman', DATE '1981-06-09');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Tom',  'Hardy', DATE '1977-09-15');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Javier', 'Bardem', DATE '1969-03-01');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Robert', 'Downey Jr.', DATE '1965-04-04');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Michelle', 'Yeoh', DATE '1962-08-06');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Michael',  'Clarke Duncan', DATE '1957-12-10');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Mel', 'Gibson', DATE '1956-01-03');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Guy', 'Pearce', DATE '1967-10-05');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Charlize', 'Theron', DATE '1975-08-07');
-INSERT INTO ACTORI (prenume, nume_familie, data_nastere) VALUES ('Rami', 'Malek', DATE '1981-05-12');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Marlon Brando', 'Marlon', 'Brando', DATE '1924-04-03');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Brad Pitt', 'Brad', 'Pitt', DATE '1963-12-18');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Viggo Mortensen', 'Viggo', 'Mortensen', DATE '1958-10-20');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Robert De Niro', 'Robert', 'De Niro', DATE '1943-08-17');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Kevin Spacey', 'Kevin', 'Spacey', DATE '1959-07-26');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Tom Hanks', 'Tom', 'Hanks',  DATE '1956-07-09');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Leonardo DiCaprio', 'Leonardo', 'DiCaprio', DATE '1974-11-11');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Joaquin Phoenix', 'Joaquin',  'Phoenix', DATE '1974-10-28');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Hugh Jackman','Hugh', 'Jackman', DATE '1968-10-12');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Miles Teller', 'Miles', 'Teller', DATE '1987-02-20');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Natalie Portman', 'Natalie', 'Portman', DATE '1981-06-09');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Tom Hardy', 'Tom', 'Hardy', DATE '1977-09-15');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Javier Bardem', 'Javier', 'Bardem', DATE '1969-03-01');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Robert Downey Jr.', 'Robert', 'Downey Jr.', DATE '1965-04-04');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Michelle Yeoh', 'Michelle', 'Yeoh', DATE '1962-08-06');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Michael Clarke Duncan', 'Michael', 'Clarke Duncan', DATE '1957-12-10');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Mel Gibson', 'Mel', 'Gibson', DATE '1956-01-03');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Guy Pearce', 'Guy', 'Pearce', DATE '1967-10-05');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Charlize Theron', 'Charlize', 'Theron', DATE '1975-08-07');
+INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Rami Malek', 'Rami', 'Malek', DATE '1981-05-12');
 
 COMMIT;
 
@@ -321,13 +321,13 @@ BEGIN
         
         CASE v_stare_nmb
             WHEN 0 THEN
-                v_stare := 'COMPLETA';
+                v_stare := 'COMPLET';
                 v_durata_reala := v_durata_ref;
             WHEN 1 THEN
-                v_stare := 'PARTIALA';
+                v_stare := 'PARTIAL';
                 v_durata_reala := ROUND(v_durata_ref * DBMS_RANDOM.VALUE(0.5, 0.8));
             ELSE
-                v_stare := 'ABANDONATA';
+                v_stare := 'ABANDONAT';
                 v_durata_reala := ROUND(v_durata_ref * DBMS_RANDOM.VALUE(0.05, 0.5));
         END CASE;
         
