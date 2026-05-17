@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/predifined-options")
+@RequestMapping("/api/predefined-options")
 public class OptionController {
 
     private final DataSource dataSource;

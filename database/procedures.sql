@@ -1,13 +1,13 @@
 -- Exceptii:
----20001, 'Clientul cu ID-ul specificat nu exista
--- -20002, 'Versiunea de film specificata nu exista.'
+-- -20001, 'Clientul cu ID-ul specificat nu exista'
+-- -20002, 'Versiunea de film cu ID-ul specificat nu exista.'
 -- -20003, parametru incorect
 -- -20004, nu exista client cu acest email
 -- -20005, 'Filmul cu ID-ul specificat nu exista.');
----20008, 'Actorul cu ID-ul ' || v_actor_id || ' nu exista.');
+---20008, 'Actorul cu ID-ul specificat nu exista.');
 --- 20009 - duplicat 
--- 20010 - votul nu exista
--- -20011, 'Optiunea nu exista.');
+-- 20010 - 'Votul cu ID-ul specificat nu exista.'
+-- -20011, 'Optiunea nu exista.'
 
 --login
 CREATE OR REPLACE PROCEDURE login_client(
@@ -68,7 +68,7 @@ CREATE OR REPLACE PROCEDURE insert_comentariu(
     p_client_id     IN  COMENTARII.client_id%TYPE,
     p_film_id       IN  COMENTARII.film_id%TYPE,
     p_text          IN  COMENTARII.text_comentariu%TYPE,
-    p_actor_ids     IN  VARCHAR2 DEFAULT NULL, --lista actori separata prin virgula
+    p_actor_ids     IN  VARCHAR2 DEFAULT NULL,
     p_comentariu_id OUT COMENTARII.comentariu_id%TYPE
 ) IS
     v_count NUMBER;
@@ -94,14 +94,14 @@ BEGIN
             v_token := TRIM(REGEXP_SUBSTR(p_actor_ids, '[^,]+', 1, i));
             
             IF NOT REGEXP_LIKE(v_token, '^[0-9]+$') THEN
-                RAISE_APPLICATION_ERROR(-20003, 'Valoarea introdusa nu este un ID valid: ' || v_token);
+                RAISE_APPLICATION_ERROR(-20003, 'Valoarea introdusa nu este un ID valid.');
             END IF;
             
             v_actor_id := TO_NUMBER(v_token);
             SELECT COUNT(*) INTO v_count FROM ACTORI WHERE actor_id = v_actor_id;
             
             IF v_count = 0 THEN
-                RAISE_APPLICATION_ERROR(-20008, 'Actorul cu ID-ul ' || v_actor_id || ' nu exista.');
+                RAISE_APPLICATION_ERROR(-20008, 'Actorul cu ID-ul specificat nu exista.');
             END IF;
         END LOOP;
     END IF;
@@ -120,7 +120,7 @@ BEGIN
                 INSERT INTO COMENTARII_ACTORI (comentariu_id, actor_id)
                 VALUES (p_comentariu_id, v_actor_id);
             EXCEPTION
-                WHEN DUP_VAL_ON_INDEX THEN -- Ignorat silențios, exista deja intrarea asta
+                WHEN DUP_VAL_ON_INDEX THEN 
                     NULL;
             END;
         END LOOP;
@@ -141,7 +141,7 @@ CREATE OR REPLACE PROCEDURE insert_vot(
 ) IS
     v_count NUMBER;
 BEGIN
-    -- validare client
+
     SELECT COUNT(*) INTO v_count FROM CLIENTI WHERE client_id = p_client_id;
     IF v_count = 0 THEN
         RAISE_APPLICATION_ERROR(-20001, 'Clientul cu ID-ul specificat nu exista.');
@@ -156,7 +156,7 @@ BEGIN
         RAISE_APPLICATION_ERROR(-20003, 'Scorul trebuie sa fie un numar intreg intre 1 si 10.');
     END IF;
 
-    --duplicat
+    --un client nu poate vota de 2 ori acelasi film
     SELECT COUNT(*) INTO v_count
     FROM VOTURI WHERE client_id = p_client_id AND film_id = p_film_id;
     IF v_count > 0 THEN
@@ -172,16 +172,15 @@ END insert_vot;
 
 --update
 CREATE OR REPLACE PROCEDURE update_vot(
-    p_client_id IN VOTURI.client_id%TYPE,
-    p_film_id   IN VOTURI.film_id%TYPE,
+    p_vot_id IN VOTURI.vot_id%TYPE,
     p_scor_nou  IN VOTURI.scor%TYPE
 ) IS
     v_count NUMBER;
 BEGIN
     SELECT COUNT(*) INTO v_count
-    FROM VOTURI WHERE client_id = p_client_id AND film_id = p_film_id;
+    FROM VOTURI WHERE vot_id=p_vot_id;
     IF v_count = 0 THEN
-        RAISE_APPLICATION_ERROR(-20010, 'Nu exista un vot al acestui client pentru filmul specificat.');
+        RAISE_APPLICATION_ERROR(-20010, 'Nu exista acest votul cu ID-ul specificat');
     END IF;
     
     IF p_scor_nou < 1 OR p_scor_nou > 10 THEN
@@ -190,7 +189,7 @@ BEGIN
 
 
     UPDATE VOTURI SET scor = p_scor_nou
-    WHERE client_id = p_client_id AND film_id = p_film_id;
+    WHERE vot_id=p_vot_id;
 
     COMMIT;
 END update_vot;
@@ -218,8 +217,7 @@ BEGIN
         SELECT op.optiune_id, op.denumire, op.tip, cfo.data_selectie
         FROM CLIENTI_FILME_OPTIUNI cfo
         JOIN OPTIUNI_PREDEFINITE op ON op.optiune_id = cfo.optiune_id
-        WHERE cfo.client_id = p_client_id
-        AND   cfo.film_id   = p_film_id;
+        WHERE cfo.client_id = p_client_id AND cfo.film_id   = p_film_id;
 END;
 /
 
@@ -234,17 +232,17 @@ CREATE OR REPLACE PROCEDURE insert_optiune_p_client_film(
 BEGIN
     SELECT COUNT(*) INTO v_count FROM CLIENTI WHERE client_id = p_client_id;
     IF v_count = 0 THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Clientul cu acest ID nu exista.');
+        RAISE_APPLICATION_ERROR(-20001, 'Clientul cu ID-ul specificat nu exista.');
     END IF;
 
     SELECT COUNT(*) INTO v_count FROM FILME WHERE film_id = p_film_id;
     IF v_count = 0 THEN
-        RAISE_APPLICATION_ERROR(-20005, 'Filmul nu exista.');
+        RAISE_APPLICATION_ERROR(-20005, 'Filmul cu ID-ul specificat nu exista.');
     END IF;
 
     SELECT COUNT(*) INTO v_count FROM OPTIUNI_PREDEFINITE WHERE optiune_id = p_optiune_id;
     IF v_count = 0 THEN
-        RAISE_APPLICATION_ERROR(-20011, 'Optiunea nu exista.');
+        RAISE_APPLICATION_ERROR(-20011, 'Optiunea cu ID-ul specificat nu exista.');
     END IF;
 
     SELECT COUNT(*) INTO v_count FROM CLIENTI_FILME_OPTIUNI
@@ -275,7 +273,7 @@ BEGIN
     AND   optiune_id = p_optiune_id;
 
     IF v_count = 0 THEN
-        RAISE_APPLICATION_ERROR(-20011, 'Optiunea cu parametrii dati(id client, id film, id optiune) nu exista.');
+        RAISE_APPLICATION_ERROR(-20011, 'Optiunea cu parametrii specificati nu exista.');
     END IF;
 
     DELETE FROM CLIENTI_FILME_OPTIUNI
@@ -295,7 +293,7 @@ CREATE OR REPLACE PROCEDURE get_filme(
 ) IS
 BEGIN
     OPEN p_cursor FOR
-        SELECT
+        SELECT 
             f.film_id,
             f.titlu,
             f.descriere,
@@ -305,7 +303,6 @@ BEGIN
             COUNT(DISTINCT v.vizualizare_id) AS nr_vizualizari,
             AVG(vf.durata_minute) AS durata_medie
         FROM FILME f
-        -- Sub-query care aduce exact un rând cu categorii gata concatenate pentru fiecare film
         LEFT JOIN (
             SELECT 
                 fc.film_id, 
@@ -314,9 +311,9 @@ BEGIN
             JOIN CATEGORII c ON c.categorie_id = fc.categorie_id
             GROUP BY fc.film_id
         ) cat ON cat.film_id = f.film_id
-        -- Restul join-urilor
-        LEFT JOIN VERSIUNI_FILME vf  ON vf.film_id = f.film_id
-        LEFT JOIN VIZUALIZARI v      ON v.versiune_id = vf.versiune_id
+        
+        LEFT JOIN VERSIUNI_FILME vf ON vf.film_id = f.film_id
+        LEFT JOIN VIZUALIZARI v ON v.versiune_id = vf.versiune_id
         GROUP BY 
             f.film_id, 
             f.titlu, 
@@ -404,7 +401,7 @@ BEGIN
     OPEN p_cursor FOR
         SELECT
             cl.client_id,
-            cl.prenume || ' ' || cl.nume    AS nume_complet,
+            cl.prenume || ' ' || cl.nume AS nume_complet,
             cl.email,
             cl.telefon,
             cl.oras,
@@ -431,9 +428,9 @@ BEGIN
         SELECT
             a.actor_id,
             a.prenume || ' ' || a.nume_familie  AS nume_complet,
-            NVL(a.nume_scena, '-')              AS nume_scena,
+            NVL(a.nume_scena, '-') AS nume_scena,
             a.data_nastere,
-            COUNT(DISTINCT d.film_id)           AS nr_filme
+            COUNT(DISTINCT d.film_id) AS nr_filme
         FROM ACTORI a
         LEFT JOIN DISTRIBUTIE d ON d.actor_id = a.actor_id
         GROUP BY a.actor_id, a.prenume, a.nume_familie, a.nume_scena, a.data_nastere
@@ -460,7 +457,7 @@ BEGIN
         RAISE_APPLICATION_ERROR(-20001, 'Clientul cu ID-ul dat nu exista.');
     END IF;
     
-    -- actorii urmariti frecvent
+    -- actori preferati
     OPEN p_actori_preferati FOR
         SELECT
             a.actor_id,
@@ -474,7 +471,7 @@ BEGIN
         GROUP BY a.actor_id, a.prenume, a.nume_familie
         ORDER BY nr_filme_vazute DESC;
 
-    -- nr de vizualizari - categorie
+    -- categorii preferate
     OPEN p_categorii_preferate FOR
         SELECT
             c.categorie_id,
@@ -489,7 +486,7 @@ BEGIN
         ORDER BY nr_vizualizari DESC;
 
 
-    -- istoric viz (ultimele 20)
+    -- istoric
     OPEN p_istoric FOR
         SELECT *
         FROM (
@@ -509,7 +506,7 @@ BEGIN
         )
         WHERE ROWNUM <= 20;
 
-    -- sentimentul dominant din comentariile clientului
+    -- sentiment
     SELECT
         SUM(CASE WHEN sentiment = 'POZITIV' THEN 1 ELSE 0 END),
         SUM(CASE WHEN sentiment = 'NEGATIV' THEN 1 ELSE 0 END),
@@ -537,9 +534,9 @@ CREATE OR REPLACE PROCEDURE get_sentiment_pred_actor(
     p_cursor    OUT SYS_REFCURSOR
 ) IS
     v_count NUMBER;
-    v_pozitiv   NUMBER := 0;
-    v_negativ   NUMBER := 0;
-    v_neutru   NUMBER := 0;
+    v_pozitiv NUMBER := 0;
+    v_negativ NUMBER := 0;
+    v_neutru NUMBER := 0;
 BEGIN
     SELECT COUNT(*) INTO v_count FROM ACTORI WHERE actor_id = p_actor_id;
     IF v_count = 0 THEN
@@ -548,26 +545,26 @@ BEGIN
 
     OPEN p_cursor FOR
         SELECT
-            co.comentariu_id,
+            com.comentariu_id,
             cl.prenume || ' ' || cl.nume AS client,
             f.titlu AS film,
-            co.text_comentariu,
-            co.data_comentariu,
-            co.sentiment
+            com.text_comentariu,
+            com.data_comentariu,
+            com.sentiment
         FROM COMENTARII_ACTORI ca
-        JOIN COMENTARII co ON co.comentariu_id = ca.comentariu_id
-        JOIN CLIENTI cl ON cl.client_id = co.client_id
-        JOIN FILME f ON f.film_id = co.film_id
+        JOIN COMENTARII com ON com.comentariu_id = ca.comentariu_id
+        JOIN CLIENTI cl ON cl.client_id = com.client_id
+        JOIN FILME f ON f.film_id = com.film_id
         WHERE ca.actor_id = p_actor_id
-        ORDER BY co.data_comentariu DESC;
+        ORDER BY com.data_comentariu DESC;
 
     SELECT
-        SUM(CASE WHEN co.sentiment = 'POZITIV' THEN 1 ELSE 0 END),
-        SUM(CASE WHEN co.sentiment = 'NEGATIV' THEN 1 ELSE 0 END),
-        SUM(CASE WHEN co.sentiment = 'NEUTRU'  THEN 1 ELSE 0 END)
+        SUM(CASE WHEN com.sentiment = 'POZITIV' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN com.sentiment = 'NEGATIV' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN com.sentiment = 'NEUTRU'  THEN 1 ELSE 0 END)
     INTO v_pozitiv, v_negativ, v_neutru
     FROM COMENTARII_ACTORI ca
-    JOIN COMENTARII co ON co.comentariu_id = ca.comentariu_id
+    JOIN COMENTARII com ON com.comentariu_id = ca.comentariu_id
     WHERE ca.actor_id = p_actor_id;
 
     IF v_pozitiv >= v_negativ AND v_pozitiv >= v_neutru THEN
@@ -601,17 +598,15 @@ BEGIN
             SELECT
                 f.film_id,
                 f.titlu,
-                ROUND(f.rating, 2)                              AS rating,
+                ROUND(f.rating, 2) AS rating,
                 f.data_lansare,
                 LISTAGG(c.denumire, ', ')
-                    WITHIN GROUP (ORDER BY c.denumire)          AS categorii,
-                -- scor de relevanta: suma nr_vizualizari din categoria filmului
-                -- de catre clientul curent (mai multe vizionari in cat → mai relevant)
-                SUM(cat_pref.nr_viz)                            AS scor_relevanta
+                    WITHIN GROUP (ORDER BY c.denumire) AS categorii,
+                SUM(cat_pref.nr_viz) AS scor_relevanta
             FROM FILME f
-            JOIN FILME_CATEGORII fc  ON fc.film_id = f.film_id
-            JOIN CATEGORII c        ON c.categorie_id = fc.categorie_id
-            -- categoriile preferate ale clientului cu nr vizualizari
+            JOIN FILME_CATEGORII fc ON fc.film_id = f.film_id
+            JOIN CATEGORII c ON c.categorie_id = fc.categorie_id
+            -- categoriile preferate
             JOIN (
                 SELECT fc2.categorie_id, COUNT(viz.vizualizare_id) AS nr_viz
                 FROM VIZUALIZARI viz
@@ -620,7 +615,7 @@ BEGIN
                 WHERE viz.client_id = p_client_id
                 GROUP BY fc2.categorie_id
             ) cat_pref ON cat_pref.categorie_id = fc.categorie_id
-            -- excludem filmele deja vizualizate de client
+            -- excludem filmele deja vizualizate 
             WHERE f.film_id NOT IN (
                 SELECT DISTINCT vf3.film_id
                 FROM VIZUALIZARI viz2
@@ -654,7 +649,6 @@ BEGIN
         RAISE_APPLICATION_ERROR(-20004, 'Filmul cu ID-ul specificat nu exista.');
     END IF;
 
-    -- detaliu sentiment pe surse
     OPEN p_cursor FOR
         SELECT 'COMENTARII' AS sursa,
                SUM(CASE WHEN sentiment = 'POZITIV' THEN 1 ELSE 0 END) AS pozitiv,
@@ -672,7 +666,6 @@ BEGIN
         JOIN OPTIUNI_PREDEFINITE op ON op.optiune_id = cfo.optiune_id
         WHERE cfo.film_id = p_film_id;
 
-    -- calculam concluzia agregata
     SELECT
         SUM(CASE WHEN sentiment = 'POZITIV' THEN 1 ELSE 0 END),
         SUM(CASE WHEN sentiment = 'NEGATIV' THEN 1 ELSE 0 END),
@@ -680,7 +673,7 @@ BEGIN
     INTO v_total_poz, v_total_neg, v_total_neu
     FROM COMENTARII WHERE film_id = p_film_id;
 
-    -- adaugam semnalul din optiunile bifate
+    -- optiuni bifate
     SELECT
         v_total_poz + SUM(CASE WHEN op.tip = 'POZITIV' THEN 1 ELSE 0 END),
         v_total_neg + SUM(CASE WHEN op.tip = 'NEGATIV' THEN 1 ELSE 0 END),
@@ -690,7 +683,7 @@ BEGIN
     JOIN OPTIUNI_PREDEFINITE op ON op.optiune_id = cfo.optiune_id
     WHERE cfo.film_id = p_film_id;
 
-    -- adaugam semnalul din rating
+    -- rating
     SELECT NVL(rating, 0) INTO v_rating FROM FILME WHERE film_id = p_film_id;
     IF    v_rating >= 7 THEN v_total_poz := v_total_poz + 2;
     ELSIF v_rating <= 4 THEN v_total_neg := v_total_neg + 2;
@@ -725,11 +718,11 @@ BEGIN
                     WHEN EXTRACT(MONTH FROM viz.data_vizualizare) IN (3, 4, 5)  THEN 'PRIMAVARA'
                     WHEN EXTRACT(MONTH FROM viz.data_vizualizare) IN (6, 7, 8)  THEN 'VARA'
                     ELSE 'TOAMNA'
-                END                                     AS sezon,
+                END AS sezon,
                 f.film_id,
                 f.titlu,
-                ROUND(f.rating, 2)                      AS rating,
-                COUNT(viz.vizualizare_id)               AS nr_vizualizari,
+                ROUND(f.rating, 2) AS rating,
+                COUNT(viz.vizualizare_id) AS nr_vizualizari,
                 -- rank per sezon dupa nr vizualizari
                 RANK() OVER (
                     PARTITION BY
@@ -740,10 +733,10 @@ BEGIN
                             ELSE 'TOAMNA'
                         END
                     ORDER BY COUNT(viz.vizualizare_id) DESC
-                )                                       AS loc_in_sezon
+                )  AS loc_in_sezon
             FROM VIZUALIZARI viz
             JOIN VERSIUNI_FILME vf ON vf.versiune_id = viz.versiune_id
-            JOIN FILME f          ON f.film_id = vf.film_id
+            JOIN FILME f ON f.film_id = vf.film_id
             GROUP BY
                 CASE
                     WHEN EXTRACT(MONTH FROM viz.data_vizualizare) IN (12, 1, 2) THEN 'IARNA'
@@ -753,7 +746,6 @@ BEGIN
                 END,
                 f.film_id, f.titlu, f.rating
         )
-        -- returnam doar primele 5 per sezon
         WHERE loc_in_sezon <= 5
         ORDER BY sezon, loc_in_sezon;
 
@@ -765,13 +757,13 @@ BEGIN
                 WHEN EXTRACT(MONTH FROM viz.data_vizualizare) IN (3, 4, 5)  THEN 'PRIMAVARA'
                 WHEN EXTRACT(MONTH FROM viz.data_vizualizare) IN (6, 7, 8)  THEN 'VARA'
                 ELSE 'TOAMNA'
-            END                             AS sezon,
-            c.denumire                      AS categorie,
-            COUNT(viz.vizualizare_id)       AS nr_vizualizari
+            END AS sezon,
+            c.denumire AS categorie,
+            COUNT(viz.vizualizare_id) AS nr_vizualizari
         FROM VIZUALIZARI viz
-        JOIN VERSIUNI_FILME vf   ON vf.versiune_id = viz.versiune_id
-        JOIN FILME_CATEGORII fc  ON fc.film_id = vf.film_id
-        JOIN CATEGORII c        ON c.categorie_id = fc.categorie_id
+        JOIN VERSIUNI_FILME vf ON vf.versiune_id = viz.versiune_id
+        JOIN FILME_CATEGORII fc ON fc.film_id = vf.film_id
+        JOIN CATEGORII c  ON c.categorie_id = fc.categorie_id
         GROUP BY
             CASE
                 WHEN EXTRACT(MONTH FROM viz.data_vizualizare) IN (12, 1, 2) THEN 'IARNA'

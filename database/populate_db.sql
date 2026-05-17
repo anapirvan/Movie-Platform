@@ -1,4 +1,4 @@
--- 1. CATEGORII
+ --CATEGORII
 INSERT INTO CATEGORII (denumire) VALUES ('Suspans');
 INSERT INTO CATEGORII (denumire) VALUES ('Dramă');
 INSERT INTO CATEGORII (denumire) VALUES ('Sci-Fi');
@@ -20,7 +20,7 @@ INSERT INTO CATEGORII (denumire) VALUES ('Sport');
 
 COMMIT;
 
--- 2. FILME
+-- FILME
 INSERT INTO FILME (titlu, descriere, data_lansare) VALUES ('The Godfather', 'Șeful îmbătrânit al unui clan mafiot cedează conducerea fiului cel mic, declanșând un război sângeros între familii.', DATE '1972-03-24');
 INSERT INTO FILME (titlu, descriere, data_lansare) VALUES ('Fight Club', 'Un angajat nemulțumit și un vânzător de săpun charismatic fondează un club de lupte clandestin cu scopuri din ce în ce mai sinistre.', DATE '1999-10-15');
 INSERT INTO FILME (titlu, descriere, data_lansare) VALUES ('The Lord of the Rings: The Fellowship of the Ring', 'Un hobbit pornește într-o călătorie epică alături de o ceată eterogenă pentru a distruge un inel al răului.', DATE '2001-12-19');
@@ -44,7 +44,7 @@ INSERT INTO FILME (titlu, descriere, data_lansare) VALUES ('Bohemian Rhapsody', 
 
 COMMIT;
 
--- 2b. FILME_CATEGORII
+-- FILME_CATEGORII
 DECLARE
     PROCEDURE film_categorii(p_titlu VARCHAR2, p_categorie VARCHAR2) IS
         v_film_id NUMBER; 
@@ -99,11 +99,10 @@ BEGIN
     
     film_categorii('Bohemian Rhapsody', 'Biografie'); film_categorii('Bohemian Rhapsody', 'Dramă'); film_categorii('Bohemian Rhapsody', 'Muzical');
     COMMIT;
-    DBMS_OUTPUT.PUT_LINE('[info]: FILM_CATEGORII populat: ' || SQL%ROWCOUNT || ' asocieri.');
 END;
 /
 
--- 3. VERSIUNI_FILME
+-- VERSIUNI_FILME
 DECLARE
     PROCEDURE insert_versiune(p_titlu VARCHAR2, p_format VARCHAR2, p_limba VARCHAR2, p_rezolutie VARCHAR2, p_durata NUMBER) IS
         v_film_id NUMBER;
@@ -152,7 +151,7 @@ BEGIN
 END;
 /
 
--- 4. ACTORI
+-- ACTORI
 INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Marlon Brando', 'Marlon', 'Brando', DATE '1924-04-03');
 INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Brad Pitt', 'Brad', 'Pitt', DATE '1963-12-18');
 INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Viggo Mortensen', 'Viggo', 'Mortensen', DATE '1958-10-20');
@@ -176,7 +175,7 @@ INSERT INTO ACTORI (nume_scena, prenume, nume_familie, data_nastere) VALUES ('Ra
 
 COMMIT;
 
--- 5. DISTRIBUTIE
+-- DISTRIBUTIE
 DECLARE
     PROCEDURE insert_distributie(p_titlu VARCHAR2, p_prenume VARCHAR2, p_familie VARCHAR2, p_personaj VARCHAR2, p_tip VARCHAR2) IS
         v_film_id  NUMBER;
@@ -215,7 +214,7 @@ BEGIN
 END;
 /
 
--- 6. CLIENTI
+-- CLIENTI
 DECLARE
     TYPE t_array IS VARRAY(10) OF VARCHAR2(100);
     
@@ -262,27 +261,8 @@ BEGIN
     COMMIT;
 END;
 /
--- 7. OPTIUNI_PREDEFINITE
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Cinematografie remarcabila', 'POZITIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Scenariu slab', 'NEGATIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Regie excelenta', 'POZITIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Actorie de exceptie', 'POZITIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Ritmul naratiunii lent', 'NEGATIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('As recomanda prietenilor', 'POZITIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Personaje bine construite','POZITIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Efecte vizuale spectaculoase','POZITIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Final dezamagitor', 'NEGATIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Coloana sonora memorabila', 'POZITIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Prea multa violenta', 'NEGATIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Prea lung', 'NEGATIV');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Subiect de actualitate', 'NEUTRU');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Final neasteptat', 'NEUTRU');
-INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Dialoguri remarcabile', 'POZITIV');
 
-COMMIT;
-/
-
--- 8. VIZUALIZARI
+-- VIZUALIZARI
 DECLARE
     TYPE t_id_list IS VARRAY(100) OF NUMBER;
     v_total NUMBER;
@@ -343,7 +323,7 @@ BEGIN
 END;
 /
 
--- 9. VOTURI
+-- VOTURI
 DECLARE
     v_inserari_total NUMBER;
     TYPE t_id_list IS VARRAY(100) OF NUMBER;
@@ -389,8 +369,81 @@ BEGIN
 END;
 /
 
+-- OPTIUNI_PREDEFINITE
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Cinematografie remarcabila', 'POZITIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Scenariu slab', 'NEGATIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Regie excelenta', 'POZITIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Actorie de exceptie', 'POZITIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Ritmul naratiunii lent', 'NEGATIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('As recomanda prietenilor', 'POZITIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Personaje bine construite','POZITIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Efecte vizuale spectaculoase','POZITIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Final dezamagitor', 'NEGATIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Coloana sonora memorabila', 'POZITIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Prea multa violenta', 'NEGATIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Prea lung', 'NEGATIV');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Subiect de actualitate', 'NEUTRU');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Final neasteptat', 'NEUTRU');
+INSERT INTO OPTIUNI_PREDEFINITE (denumire, tip) VALUES ('Dialoguri remarcabile', 'POZITIV');
 
--- 10. COMENTARII
+COMMIT;
+/
+
+-- CLIENTI_FILME_OPTIUNI
+DECLARE
+    TYPE t_id_list IS VARRAY(200) OF NUMBER;
+    v_total NUMBER;
+    
+    v_list_optiuni  t_id_list;
+    v_list_filme    t_id_list;
+    v_list_clienti  t_id_list;
+    
+    CURSOR cursor_optiuni IS SELECT optiune_id FROM OPTIUNI_PREDEFINITE;
+    CURSOR cursor_filme IS SELECT film_id FROM FILME;
+    CURSOR cursor_clienti IS SELECT client_id FROM CLIENTI;
+    
+    pos_optiune NUMBER;
+    pos_film NUMBER;
+    pos_client NUMBER;
+BEGIN
+    v_total := TRUNC(DBMS_RANDOM.VALUE(30, 60));
+    
+    OPEN cursor_optiuni;
+    FETCH cursor_optiuni BULK COLLECT INTO v_list_optiuni LIMIT 200;
+    CLOSE cursor_optiuni;
+    
+    OPEN cursor_filme;
+    FETCH cursor_filme BULK COLLECT INTO v_list_filme LIMIT 200;
+    CLOSE cursor_filme;
+    
+    OPEN cursor_clienti;
+    FETCH cursor_clienti BULK COLLECT INTO v_list_clienti LIMIT 200;
+    CLOSE cursor_clienti;
+    
+    FOR i IN 1..v_total LOOP
+        pos_optiune := TRUNC(DBMS_RANDOM.VALUE(1, v_list_optiuni.count + 1));
+        pos_film    := TRUNC(DBMS_RANDOM.VALUE(1, v_list_filme.count + 1));
+        pos_client  := TRUNC(DBMS_RANDOM.VALUE(1, v_list_clienti.count + 1));
+        
+        BEGIN
+            INSERT INTO CLIENTI_FILME_OPTIUNI (client_id, film_id, optiune_id, data_selectie)
+            VALUES (
+                v_list_clienti(pos_client),
+                v_list_filme(pos_film),
+                v_list_optiuni(pos_optiune),
+                SYSDATE - DBMS_RANDOM.VALUE(1, 365)
+            );
+        EXCEPTION
+            WHEN DUP_VAL_ON_INDEX THEN
+                NULL;
+        END;
+    END LOOP;
+    
+    COMMIT;
+END;
+/
+
+-- COMENTARII
 DECLARE
     TYPE t_id_list IS VARRAY(200) OF NUMBER;
     TYPE t_str IS VARRAY(20) OF VARCHAR2(2000);
@@ -458,6 +511,8 @@ BEGIN
 END;
 /
 
+-- COMENTARII_ACTORI
+
 DECLARE
     TYPE t_id_list IS VARRAY(200) OF NUMBER;
     v_total NUMBER;
@@ -501,56 +556,4 @@ BEGIN
 END;
 /
 
--- 11. CLIENT_FILM_OPTIUNI
-DECLARE
-    TYPE t_id_list IS VARRAY(200) OF NUMBER;
-    v_total NUMBER;
-    
-    v_list_optiuni  t_id_list;
-    v_list_filme    t_id_list;
-    v_list_clienti  t_id_list;
-    
-    CURSOR cursor_optiuni IS SELECT optiune_id FROM OPTIUNI_PREDEFINITE;
-    CURSOR cursor_filme IS SELECT film_id FROM FILME;
-    CURSOR cursor_clienti IS SELECT client_id FROM CLIENTI;
-    
-    pos_optiune NUMBER;
-    pos_film NUMBER;
-    pos_client NUMBER;
-BEGIN
-    v_total := TRUNC(DBMS_RANDOM.VALUE(30, 60));
-    
-    OPEN cursor_optiuni;
-    FETCH cursor_optiuni BULK COLLECT INTO v_list_optiuni LIMIT 200;
-    CLOSE cursor_optiuni;
-    
-    OPEN cursor_filme;
-    FETCH cursor_filme BULK COLLECT INTO v_list_filme LIMIT 200;
-    CLOSE cursor_filme;
-    
-    OPEN cursor_clienti;
-    FETCH cursor_clienti BULK COLLECT INTO v_list_clienti LIMIT 200;
-    CLOSE cursor_clienti;
-    
-    FOR i IN 1..v_total LOOP
-        pos_optiune := TRUNC(DBMS_RANDOM.VALUE(1, v_list_optiuni.count + 1));
-        pos_film    := TRUNC(DBMS_RANDOM.VALUE(1, v_list_filme.count + 1));
-        pos_client  := TRUNC(DBMS_RANDOM.VALUE(1, v_list_clienti.count + 1));
-        
-        BEGIN
-            INSERT INTO CLIENTI_FILME_OPTIUNI (client_id, film_id, optiune_id, data_selectie)
-            VALUES (
-                v_list_clienti(pos_client),
-                v_list_filme(pos_film),
-                v_list_optiuni(pos_optiune),
-                SYSDATE - DBMS_RANDOM.VALUE(1, 365)
-            );
-        EXCEPTION
-            WHEN DUP_VAL_ON_INDEX THEN
-                NULL;
-        END;
-    END LOOP;
-    
-    COMMIT;
-END;
-/
+
